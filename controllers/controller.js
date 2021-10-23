@@ -212,7 +212,7 @@ const callQuicksight = () => {
     AwsAccountId: process.env.AwsAccountId, // '327581952167', /* required */
     DataSetId: process.env.DataSetId, // 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f', /* required */
     IngestionId: process.env.IngestionId, // 'TPV Data Ingestion', /* required */
-    IngestionType: process.env.IngestionType // "INCREMENTAL_REFRESH"
+    // IngestionType: process.env.IngestionType // "INCREMENTAL_REFRESH"
   };
 
   console.log("callQuicksight - params", params);
