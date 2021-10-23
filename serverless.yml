@@ -55,7 +55,7 @@ functions:
       
   trigger:
     handler: handler.eventHandlerForATriggerCall
-    timeout: 900 #
+    timeout: 60 #
     name: bbva-event-notifications-s3Trigger
     description: Función para el manejo de alertas y notificaciones - trigger 
     environment:

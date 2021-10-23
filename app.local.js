@@ -52,8 +52,8 @@ function sqsSendMsg(){
               StringValue: 'notifications handler'
           }
       },
-      MessageDeduplicationId: new Date().getTime(),
-      MessageGroupId: new Date().getTime(),
+      MessageDeduplicationId: ""+new Date().getTime(),
+      MessageGroupId: ""+new Date().getTime(),
       MessageBody: JSON.stringify(messageParams),
       QueueUrl: process.env.BBVA_EVENTS_SQS
   }
