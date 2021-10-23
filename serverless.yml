@@ -17,6 +17,7 @@ provider:
   apiGateway:
     description: bbva-event-notifications - manejo de alertas y notificaciones
   iamManagedPolicies:
+    - arn:aws:iam::327581952167:policy/service-role/AWSQuickSightIAMPolicy
     - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
     - arn:aws:iam::aws:policy/AmazonSQSFullAccess
     - arn:aws:iam::aws:policy/AmazonSNSFullAccess
@@ -27,6 +28,10 @@ provider:
     DYNAMO_TABLE_ERROR_CODES: ${self:custom.DYNAMO_TABLE_ERROR_CODES}
     DYNAMO_TABLE_TPV_DATA: ${self:custom.DYNAMO_TABLE_TPV_DATA}
     BBVA_DB_ISAM: ${self:custom.BBVA_DB_ISAM}
+    AwsAccountId: ${self:custom.AwsAccountId}
+    DataSetId: ${self:custom.DataSetId}
+    IngestionId: ${self:custom.IngestionId}
+    IngestionType: ${self:custom.IngestionType}
 
 functions:
   main:
@@ -79,3 +84,8 @@ custom:
   BBVA_ERRORS_SQS: "https://sqs.us-east-1.amazonaws.com/327581952167/bbva-error-handler.fifo"
 
   BBVA_DB_ISAM: 'http://ec2-54-234-93-168.compute-1.amazonaws.com:3300/isam/'
+
+  AwsAccountId: '327581952167'
+  DataSetId: 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f'
+  IngestionId: 'TPV Data Ingestion'
+  IngestionType: "INCREMENTAL_REFRESH"
