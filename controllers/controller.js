@@ -110,7 +110,7 @@ exports.processSQSMessage = async (req) => {
 
 exports.processDynamoMessage = async (req) => {
 
-  await callQuicksight();
+  // await callQuicksight();
 
   console.log("processDynamoMessage:body",req.body);
   // let body = JSON.parse(req.body);

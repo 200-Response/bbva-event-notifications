@@ -68,6 +68,17 @@ functions:
     name: bbva-event-notifications-dynamoTrigger
     description: Función para el manejo de nuevos registros - dynamo trigger 
     # events:
+  quicksightCronJob:
+    handler: handler.cron
+    timeout: 60 #
+    name: bbva-quicksightCronJob
+    description:  Función Cron job para llamar quicksight.createIngestion 
+    events:
+      - schedule: 
+          name: quicksight-cron-job
+          description: 'Cron job Función para llamar quicksight.createIngestion 10 min'
+          rate: rate(10 minutes)
+          enabled: true
 
 
 custom:
