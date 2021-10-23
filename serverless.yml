@@ -26,7 +26,7 @@ provider:
     BBVA_EVENTS_SQS: ${self:custom.BBVA_EVENTS_SQS}
     DYNAMO_TABLE_ERROR_CODES: ${self:custom.DYNAMO_TABLE_ERROR_CODES}
     DYNAMO_TABLE_TPV_DATA: ${self:custom.DYNAMO_TABLE_TPV_DATA}
-    # athenaOutputQuerys: ${self:custom.${opt:stage, self:provider.stage}BUCKET_ATHENA}
+    BBVA_DB_ISAM: ${self:custom.BBVA_DB_ISAM}
 
 functions:
   main:
@@ -34,9 +34,6 @@ functions:
     timeout: 600 #
     name: bbva-event-notifications 
     description: Función principal para el manejo de alertas y notificaciones 
-    # environment:
-      # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
-      # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
     events:
       - http: ANY /
       - http: 'ANY {proxy+}' 
@@ -45,9 +42,6 @@ functions:
     timeout: 60 #
     name: bbva-event-notifications-sqsTrigger
     description: Función para el manejo de alertas y notificaciones - trigger 
-    # environment:
-      # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
-      # # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
     events:
       - sqs:
             arn: ${self:custom.${opt:stage, self:provider.stage}SQS_ARN_ALERT}
@@ -62,10 +56,7 @@ functions:
     timeout: 60 #
     name: bbva-event-notifications-dynamoTrigger
     description: Función para el manejo de nuevos registros - dynamo trigger 
-    # environment:
-      # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
-      # # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
-    events:
+    # events:
 
 
 custom:
@@ -78,21 +69,13 @@ custom:
   productionSQS_ARN_ERROR: 'arn:aws:sqs:us-east-1:327581952167:bbva-error-handler.fifo'
   developmentSQS_ARN_ERROR: 'arn:aws:sqs:us-east-2:327581952167:bbva-error-handler.fifo'
   
-  # productionS3ARN: 'arn:aws:s3:::tmp-s3-test-01'
-  # developmentS3ARN: 'arn:aws:s3:::tmp-s3-test-dev-1'
-  
-  # productionBUCKET: 'tmp-s3-test-01'
-  # developmentBUCKET: 'tmp-s3-test-dev-1'
-
-  # productionBUCKET_ATHENA: 'athena-output-queries-1'
-  # developmentBUCKET_ATHENA: 'athena-output-queries-dev-1'
-
   productionREGION: 'us-east-1'
   developmentREGION: 'us-east-2'
 
-  # TEST_VARIABLE: 'algun valor'
   DYNAMO_TABLE_ERROR_CODES: 'TPV_Error_Codes'
   DYNAMO_TABLE_TPV_DATA: 'TPV_Data'
 
   BBVA_EVENTS_SQS: "https://sqs.us-east-1.amazonaws.com/327581952167/bbva-event-alert.fifo"
   BBVA_ERRORS_SQS: "https://sqs.us-east-1.amazonaws.com/327581952167/bbva-error-handler.fifo"
+
+  BBVA_DB_ISAM: 'http://ec2-54-234-93-168.compute-1.amazonaws.com:3300/isam/'

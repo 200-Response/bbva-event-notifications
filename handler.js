@@ -29,10 +29,12 @@ module.exports.eventHandlerForADynamoTriggerCall  = async (event, context, callb
     // console.log("event.Records",event.Records);
     console.log("start foreach");
     for(let i = 0; i < event.Records.length; i++){
-        // console.log("event.Records[i]",event.Records[i].dynamodb);
-        console.log("event.Records[i].dynamodb.NewImage",event.Records[i].dynamodb.NewImage);
-        let data = event.Records[i].dynamodb.NewImage;
-        await controller.processDynamoMessage({body: data});
+        if(!event.Records[i].eventName.includes('REMOVE')){
+            console.log("event.Records[i]",event.Records[i].dynamodb);
+            console.log("event.Records[i].dynamodb.NewImage",event.Records[i].dynamodb.NewImage);
+            let data = event.Records[i].dynamodb.NewImage;
+            await controller.processDynamoMessage({body: data});
+        }
     }
     console.log("end foreach");
     return {};
