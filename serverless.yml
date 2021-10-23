@@ -17,11 +17,9 @@ provider:
   apiGateway:
     description: bbva-event-notifications - manejo de alertas y notificaciones
   iamManagedPolicies:
-    - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    - arn:aws:iam::aws:policy/AmazonSQSFullAccess
     - arn:aws:iam::aws:policy/AmazonSNSFullAccess
-    - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
     - arn:aws:iam::aws:policy/AmazonKinesisFullAccess
-    - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -32,14 +30,12 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
-    - Effect: Allow
-      Action:
-        - sqs:*
-      Resource: arn:aws:sqs:*:*:*
   environment:
+    BBVA_ERRORS_SQS: ${self:custom.BBVA_ERRORS_SQS}
     BBVA_EVENTS_SQS: ${self:custom.BBVA_EVENTS_SQS}
     DYNAMO_TABLE_ERROR_CODES: ${self:custom.DYNAMO_TABLE_ERROR_CODES}
-    athenaOutputQuerys: ${self:custom.${opt:stage, self:provider.stage}BUCKET_ATHENA}
+    DYNAMO_TABLE_TPV_DATA: ${self:custom.DYNAMO_TABLE_TPV_DATA}
+    # athenaOutputQuerys: ${self:custom.${opt:stage, self:provider.stage}BUCKET_ATHENA}
 
 functions:
   main:
@@ -47,50 +43,64 @@ functions:
     timeout: 600 #
     name: bbva-event-notifications 
     description: Función principal para el manejo de alertas y notificaciones 
-    environment:
-      BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
-      TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
+    # environment:
+      # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
+      # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
     events:
       - http: ANY /
-      - http: 'ANY {proxy+}'
-      
+      - http: 'ANY {proxy+}' 
   trigger:
     handler: handler.eventHandlerForATriggerCall
     timeout: 60 #
-    name: bbva-event-notifications-s3Trigger
+    name: bbva-event-notifications-sqsTrigger
     description: Función para el manejo de alertas y notificaciones - trigger 
-    environment:
-      TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
-      BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
+    # environment:
+      # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
+      # # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
     events:
-      - s3:
-          bucket: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
-          event: s3:ObjectCreated:*
-          rules:
-            - suffix: .csv
-          existing: true
-    
+      - sqs:
+            arn: ${self:custom.${opt:stage, self:provider.stage}SQS_ARN_ALERT}
+            batchSize: 1
+            maximumRetryAttempts: 2
+      - sqs:
+            arn: ${self:custom.${opt:stage, self:provider.stage}SQS_ARN_ERROR}
+            batchSize: 1
+            maximumRetryAttempts: 2
+  triggerDynamo:
+    handler: handler.eventHandlerForADynamoTriggerCall
+    timeout: 60 #
+    name: bbva-event-notifications-dynamoTrigger
+    description: Función para el manejo de nuevos registros - dynamo trigger 
+    # environment:
+      # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
+      # # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
+    # events:
 
 custom:
   productionDeployBucket: 'xserverless-bbva-deploys-1'
   developmentDeployBucket: 'xserverless-bbva-deploys-dev-1'
 
-  productionSQS: 'arn:aws:sqs:us-east-1::errorsGeneralHandler.fifo'
-  developmentSQS: 'arn:aws:sqs:us-east-1::errorsGeneralHandler.fifo'
+  productionSQS_ARN_ALERT: 'arn:aws:sqs:us-east-1:327581952167:bbva-event-alert.fifo'
+  developmentSQS_ARN_ALERT: 'arn:aws:sqs:us-east-2:327581952167:bbva-event-alert.fifo'
   
-  productionS3ARN: 'arn:aws:s3:::tmp-s3-test-01'
-  developmentS3ARN: 'arn:aws:s3:::tmp-s3-test-dev-1'
+  productionSQS_ARN_ERROR: 'arn:aws:sqs:us-east-1:327581952167:bbva-error-handler.fifo'
+  developmentSQS_ARN_ERROR: 'arn:aws:sqs:us-east-2:327581952167:bbva-error-handler.fifo'
   
-  productionBUCKET: 'tmp-s3-test-01'
-  developmentBUCKET: 'tmp-s3-test-dev-1'
+  # productionS3ARN: 'arn:aws:s3:::tmp-s3-test-01'
+  # developmentS3ARN: 'arn:aws:s3:::tmp-s3-test-dev-1'
+  
+  # productionBUCKET: 'tmp-s3-test-01'
+  # developmentBUCKET: 'tmp-s3-test-dev-1'
 
-  productionBUCKET_ATHENA: 'athena-output-queries-1'
-  developmentBUCKET_ATHENA: 'athena-output-queries-dev-1'
+  # productionBUCKET_ATHENA: 'athena-output-queries-1'
+  # developmentBUCKET_ATHENA: 'athena-output-queries-dev-1'
 
   productionREGION: 'us-east-1'
   developmentREGION: 'us-east-2'
 
-  TEST_VARIABLE: 'algun valor'
+  # TEST_VARIABLE: 'algun valor'
   DYNAMO_TABLE_ERROR_CODES: 'TPV_Error_Codes'
+  DYNAMO_TABLE_TPV_DATA: 'TPV_Data'
 
   BBVA_EVENTS_SQS: "https://sqs.us-east-1.amazonaws.com/327581952167/bbva-event-alert.fifo"
+  BBVA_ERRORS_SQS: "https://sqs.us-east-1.amazonaws.com/327581952167/bbva-error-handler.fifo"

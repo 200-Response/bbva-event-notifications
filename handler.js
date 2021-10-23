@@ -24,3 +24,12 @@ module.exports.eventHandlerForATriggerCall  = async (event, context, callback) =
     return {};
 };
   
+module.exports.eventHandlerForADynamoTriggerCall  = async (event, context, callback) => {
+    console.log("start foreach");
+    for(let i = 0; i < event.Records.length; i++){
+        let { body } = event.Records[i];
+        await controller.processSQSMessage({body: body});
+    }
+    console.log("end foreach");
+    return {};
+};
