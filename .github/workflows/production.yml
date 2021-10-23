@@ -1,5 +1,11 @@
-deploy-aws-master:
-    name: deploy to aws production
+name: Deploy Serverless to prod
+on: 
+  push:
+    branches: 
+      - master
+jobs:
+  deploy-aws-production:
+    name: deploy to aws
     runs-on: ubuntu-latest
     strategy:
       matrix:
