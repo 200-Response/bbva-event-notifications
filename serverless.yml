@@ -36,6 +36,8 @@ provider:
         - sqs:*
       Resource: arn:aws:sqs:*:*:*
   environment:
+    BBVA_EVENTS_SQS: ${self:custom.BBVA_EVENTS_SQS}
+    DYNAMO_TABLE_ERROR_CODES: ${self:custom.DYNAMO_TABLE_ERROR_CODES}
     athenaOutputQuerys: ${self:custom.${opt:stage, self:provider.stage}BUCKET_ATHENA}
 
 functions:
@@ -88,3 +90,6 @@ custom:
   developmentREGION: 'us-east-2'
 
   TEST_VARIABLE: 'algun valor'
+  DYNAMO_TABLE_ERROR_CODES: 'TPV_Error_Codes'
+
+  BBVA_EVENTS_SQS: "https://sqs.us-east-1.amazonaws.com/327581952167/bbva-event-alert.fifo"
