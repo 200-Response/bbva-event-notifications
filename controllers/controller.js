@@ -4,6 +4,7 @@
 const dynamoService = require('../services/dynamo.js');
 const sqsService = require('../services/sqs.js');
 const snsService = require('./../services/sns');
+const axios = require('axios');
 
 const AWS = require('aws-sdk');
 
