@@ -76,8 +76,8 @@ functions:
     events:
       - schedule: 
           name: quicksight-cron-job
-          description: 'Cron job Función para llamar quicksight.createIngestion 10 min'
-          rate: rate(10 minutes)
+          description: 'Cron job Función para llamar quicksight.createIngestion 1 min'
+          rate: rate(5 minutes)
           enabled: true
 
 

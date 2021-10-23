@@ -5,6 +5,8 @@ const app = require('./app');
 
 const controller = require('./controllers/controller.js');
 
+const AWS = require('aws-sdk');
+
 module.exports.main = serverless(app);
 
 module.exports.eventHandlerForATriggerCall  = async (event, context, callback) => {
