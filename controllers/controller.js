@@ -71,3 +71,70 @@ exports.processSQSMessage = async (req) => {
   // console.log(responseObj);
   // res.json(responseObj);
 };
+
+exports.processDynamoMessage = async (req) => {
+
+  console.log("processDynamoMessage:body",req.body);
+  // let body = JSON.parse(req.body);
+  
+  console.log("body.statusCode", req.body.statusCode);
+  if(typeof req.body.statusCode !== 'undefined'){
+    // here validate the enrichment data and
+    // vlidate the sqs values
+
+    await sendSQSMessage(req.body.statusCode, req.body);
+  }
+  
+  return;
+};
+
+const sendSQSMessage = (statusCode, data) => {
+  const errorCodes = ["05", "83"];
+
+  let SQS_Type = process.env.BBVA_EVENTS_SQS;
+
+  if (statusCode.includes(errorCodes)) {
+    SQS_Type = process.env.BBVA_ERRORS_SQS;
+  }
+
+  return new Promise((resolve, reject) =>{
+    let messageParams = {
+      "type": "test",
+      "client": "bbva",
+      "client_id": "bbva",
+      "message_data": {
+        "tpv_error_id": "75",
+        "details": data
+      }
+    };
+  
+    let messageParamsFromTrigger = {
+      MessageAttributes: {
+        "Client": {
+          DataType: "String",
+          StringValue: "BBVA"
+        },
+        "Type": {
+          DataType: "String",
+          StringValue: 'notifications handler'
+        }
+      },
+      MessageDeduplicationId: "" + new Date().getTime(),
+      MessageGroupId: "" + new Date().getTime(),
+      MessageBody: JSON.stringify(messageParams),
+      QueueUrl: SQS_Type
+    }
+  
+    console.log(messageParamsFromTrigger);
+    sqs.sendMessage(messageParamsFromTrigger, (err, data) => {
+      // console.log("sqs send");
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        console.log(data);
+        resolve(data);
+      }
+    });
+  });
+};

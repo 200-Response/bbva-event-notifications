@@ -25,10 +25,14 @@ module.exports.eventHandlerForATriggerCall  = async (event, context, callback) =
 };
   
 module.exports.eventHandlerForADynamoTriggerCall  = async (event, context, callback) => {
+    console.log("eventHandlerForADynamoTriggerCall");
+    // console.log("event.Records",event.Records);
     console.log("start foreach");
     for(let i = 0; i < event.Records.length; i++){
-        let { body } = event.Records[i];
-        await controller.processSQSMessage({body: body});
+        // console.log("event.Records[i]",event.Records[i].dynamodb);
+        console.log("event.Records[i].dynamodb.NewImage",event.Records[i].dynamodb.NewImage);
+        let data = event.Records[i].dynamodb.NewImage;
+        await controller.processDynamoMessage({body: data});
     }
     console.log("end foreach");
     return {};

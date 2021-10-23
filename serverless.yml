@@ -17,19 +17,10 @@ provider:
   apiGateway:
     description: bbva-event-notifications - manejo de alertas y notificaciones
   iamManagedPolicies:
+    - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
     - arn:aws:iam::aws:policy/AmazonSQSFullAccess
     - arn:aws:iam::aws:policy/AmazonSNSFullAccess
     - arn:aws:iam::aws:policy/AmazonKinesisFullAccess
-  iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
   environment:
     BBVA_ERRORS_SQS: ${self:custom.BBVA_ERRORS_SQS}
     BBVA_EVENTS_SQS: ${self:custom.BBVA_EVENTS_SQS}
@@ -74,7 +65,8 @@ functions:
     # environment:
       # TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
       # # BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
-    # events:
+    events:
+
 
 custom:
   productionDeployBucket: 'xserverless-bbva-deploys-1'
