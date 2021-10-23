@@ -28,16 +28,16 @@ exports.processSQSMessage = async (req) => {
   let response;
 
   let snsParams = {
-    Message: "Mensaje de prueba", /* required */
-    Subject: '',
-    TopicArn: ''
+    // Message: "Mensaje de prueba", /* required */
+    // Subject: '',
+    // TopicArn: ''
   };
 
   let paramsDynamo = {
     TableName : process.env.DYNAMO_TABLE_ERROR_CODES,
     KeyConditionExpression: "#zc = :zz",
     ExpressionAttributeNames:{
-        "#zc": "TPV_error_dynamo_part_key"
+        "#zc": "TPV_error_dynamo_part_key",
     },
     ExpressionAttributeValues: {
         ":zz": message_data.tpv_error_id,
@@ -47,11 +47,16 @@ exports.processSQSMessage = async (req) => {
 
   snsParams.Message = "Error id: "+ message_data.tpv_error_id + "\n" +
   "example";
+  
 
   try {
     response = await dynamoService.queryItem(paramsDynamo);
     console.log(response);
     if (response.Count > 0) {
+
+    
+      snsParams.Message = "\n" + snsParams.Message +
+      " Mensaje: " + response.Items[0].TPV_error_dynamo_order_key;
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
