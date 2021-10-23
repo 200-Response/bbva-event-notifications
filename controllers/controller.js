@@ -4,6 +4,8 @@
 const dynamoService = require('../services/dynamo.js');
 const s3Service = require('../services/s3.js');
 const sqsService = require('../services/sqs.js');
+const snsService = require('./../services/sns');
+
 const csv = require('csvtojson');
 
 exports.test = async (req, res) => {
@@ -18,8 +20,10 @@ exports.test = async (req, res) => {
 exports.processSQSMessage = async (req) => {
 
   let body = JSON.parse(req.body);
-  let message_data = JSON.stringify(body.message_data);
+  let message_data = body.message_data;
 
+  console.log("body", body);
+  console.log("message_data", message_data);
   let response;
 
   let snsParams = {
@@ -44,20 +48,19 @@ exports.processSQSMessage = async (req) => {
     response = await dynamoService.queryItem(paramsDynamo);
     console.log(response);
     if (response.Count > 0) {
-      snsParams.Subject = response[0].SNS_Topic;
-      snsParams.TopicArn = response[0].SNS_Topic_ARN;
+      snsParams.Subject = response.Items[0].SNS_Topic;
+      snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
   } catch (e) {
-    legacyErrorHandler = true;
-    params.Subject = body.errorType;
-    params.TopicArn = process.env.DMC_DefaultArn;
+    // params.Subject = body.errorType;
+    // params.TopicArn = process.env.DMC_DefaultArn;
+    console.log(e);
   }
 
   try {
     response = await snsService.publish(snsParams);
   } catch (error) {
     console.log(error);
-    legacyErrorHandler = true;
   }
 
   return;

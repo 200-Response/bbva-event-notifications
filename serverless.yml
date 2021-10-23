@@ -18,6 +18,7 @@ provider:
     description: bbva-event-notifications - manejo de alertas y notificaciones
   iamManagedPolicies:
     - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    - arn:aws:iam::aws:policy/AmazonSNSFullAccess
     - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
     - arn:aws:iam::aws:policy/AmazonKinesisFullAccess
     - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
