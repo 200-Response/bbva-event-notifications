@@ -215,6 +215,8 @@ const callQuicksight = () => {
     IngestionType: process.env.IngestionType // "INCREMENTAL_REFRESH"
   };
 
+  console.log("callQuicksight - params", params);
+
   quicksight.createIngestion(params, function (err, data) {
     if (err) console.log(err, err.stack); // an error occurred
     else console.log(data);           // successful response
