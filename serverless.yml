@@ -22,6 +22,12 @@ provider:
     - arn:aws:iam::aws:policy/AmazonSQSFullAccess
     - arn:aws:iam::aws:policy/AmazonSNSFullAccess
     - arn:aws:iam::aws:policy/AmazonKinesisFullAccess
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'quicksight:CreateIngestion'
+      Resource: arn:aws:quicksight:*:*:*
+  
   environment:
     BBVA_ERRORS_SQS: ${self:custom.BBVA_ERRORS_SQS}
     BBVA_EVENTS_SQS: ${self:custom.BBVA_EVENTS_SQS}
