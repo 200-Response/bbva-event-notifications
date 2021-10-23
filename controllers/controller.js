@@ -157,7 +157,7 @@ const sendSQSMessage = (statusCode, data) => {
       "client_id": "bbva",
       "message_data": {
         "source": SQS_Type,
-        "tpv_error_id": "75",
+        "tpv_error_id": statusCode,
         "details": data
       }
     };
