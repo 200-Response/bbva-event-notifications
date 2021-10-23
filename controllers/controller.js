@@ -2,11 +2,10 @@
 
 //Import services
 const dynamoService = require('../services/dynamo.js');
-const s3Service = require('../services/s3.js');
 const sqsService = require('../services/sqs.js');
 const snsService = require('./../services/sns');
 
-const csv = require('csvtojson');
+var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 exports.test = async (req, res) => {
   let responseObj = {
@@ -79,16 +78,22 @@ exports.processDynamoMessage = async (req) => {
   
   console.log("body.statusCode", req.body.statusCode);
   if(typeof req.body.statusCode !== 'undefined'){
+    // format json
+    let formatedData = formatDyanamoJsonToJson(req.body);
     // here validate the enrichment data and
+    
+    // get stock data
+
     // vlidate the sqs values
 
-    await sendSQSMessage(req.body.statusCode, req.body);
+    await sendSQSMessage(formatedData.statusCode, formatedData);
   }
   
   return;
 };
 
 const sendSQSMessage = (statusCode, data) => {
+  
   const errorCodes = ["05", "83"];
 
   let SQS_Type = process.env.BBVA_EVENTS_SQS;
@@ -138,3 +143,15 @@ const sendSQSMessage = (statusCode, data) => {
     });
   });
 };
+
+const formatDyanamoJsonToJson = (data) => {
+  console.log("formatDyanamoJsonToJson:old", data);
+  let keys = Object.keys(data);
+  for (let index = 0; index < keys.length; index++) {
+    const element = keys[index];
+    let keysType = Object.keys(data[element]);
+    data[element] = data[element][ keysType[0] ];
+  }
+  console.log("formatDyanamoJsonToJson:new", data);
+  return data;
+}; 
