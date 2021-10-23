@@ -1,0 +1,90 @@
+# Happy Coding!
+service: bbva-event-notifications
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ${self:custom.${opt:stage, self:provider.stage}REGION}
+  memorySize: 1024
+  lambdaHashingVersion: 20201221
+  stage: development
+  stackName: bbva-event-notifications 
+  apiName: bbva-event-notifications 
+  deploymentBucket:
+    name: ${self:custom.${opt:stage, self:provider.stage}DeployBucket}
+  apiGateway:
+    description: Nombre de la lambda a usar 
+  iamManagedPolicies:
+    - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
+    - arn:aws:iam::aws:policy/AmazonKinesisFullAccess
+    - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource: arn:aws:sqs:*:*:*
+  environment:
+    athenaOutputQuerys: ${self:custom.${opt:stage, self:provider.stage}BUCKET_ATHENA}
+
+functions:
+  main:
+    handler: handler.main
+    timeout: 600 #
+    name: bbva-event-notifications 
+    description: Nombre de la lambda a usar 
+    environment:
+      BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
+      TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+      
+  trigger:
+    handler: handler.eventHandlerForATriggerCall
+    timeout: 900 #
+    name: bbva-event-notifications-s3Trigger
+    description: Nombre de la lambda trigger 
+    environment:
+      TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
+      BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
+    events:
+      - s3:
+          bucket: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .csv
+          existing: true
+    
+
+custom:
+  productionDeployBucket: 'xserverless-bbva-deploys-1'
+  developmentDeployBucket: 'xserverless-bbva-deploys-dev-1'
+
+  productionSQS: 'arn:aws:sqs:us-east-1::errorsGeneralHandler.fifo'
+  developmentSQS: 'arn:aws:sqs:us-east-1::errorsGeneralHandler.fifo'
+  
+  productionS3ARN: 'arn:aws:s3:::tmp-s3-test-01'
+  developmentS3ARN: 'arn:aws:s3:::tmp-s3-test-dev-1'
+  
+  productionBUCKET: 'tmp-s3-test-01'
+  developmentBUCKET: 'tmp-s3-test-dev-1'
+
+  productionBUCKET_ATHENA: 'athena-output-queries-1'
+  developmentBUCKET_ATHENA: 'athena-output-queries-dev-1'
+
+  productionREGION: 'us-east-1'
+  developmentREGION: 'us-east-2'
+
+  TEST_VARIABLE: 'algun valor'
