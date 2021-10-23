@@ -110,7 +110,7 @@ exports.processSQSMessage = async (req) => {
 
 exports.processDynamoMessage = async (req) => {
 
-  callQuicksight();
+  await callQuicksight();
 
   console.log("processDynamoMessage:body",req.body);
   // let body = JSON.parse(req.body);
@@ -206,19 +206,28 @@ const formatDyanamoJsonToJson = (data) => {
 }; 
 
 const callQuicksight = () => {
+
   var quicksight = new AWS.QuickSight();
 
-  var params = {
-    AwsAccountId: process.env.AwsAccountId, // '327581952167', /* required */
-    DataSetId: process.env.DataSetId, // 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f', /* required */
-    IngestionId: process.env.IngestionId, // 'TPV Data Ingestion', /* required */
-    // IngestionType: process.env.IngestionType // "INCREMENTAL_REFRESH"
-  };
-
-  console.log("callQuicksight - params", params);
-
-  quicksight.createIngestion(params, function (err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else console.log(data);           // successful response
+  return new Promise((resolve, reject) =>{
+    var params = {
+      AwsAccountId: process.env.AwsAccountId, // '327581952167', /* required */
+      DataSetId: process.env.DataSetId, // 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f', /* required */
+      IngestionId: process.env.IngestionId, // 'TPV Data Ingestion', /* required */
+      // IngestionType: process.env.IngestionType // "INCREMENTAL_REFRESH"
+    };
+  
+    console.log("callQuicksight - params", params);
+  
+    quicksight.createIngestion(params, function (err, data) {
+      if (err){ 
+        console.log(err, err.stack); // an error occurred
+        reject(err);
+      }
+      else {
+        console.log("quicksight.createIngestion data",data); 
+        resolve(data);
+      }          // successful response
+    });
   });
 };

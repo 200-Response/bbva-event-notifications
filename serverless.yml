@@ -87,5 +87,5 @@ custom:
 
   AwsAccountId: '327581952167'
   DataSetId: 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f'
-  IngestionId: 'TPV Data Ingestion'
+  IngestionId: 'TPV_Data_Ingestion'
   IngestionType: 'INCREMENTAL_REFRESH'
