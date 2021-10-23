@@ -5,6 +5,8 @@ const dynamoService = require('../services/dynamo.js');
 const sqsService = require('../services/sqs.js');
 const snsService = require('./../services/sns');
 
+const AWS = require('aws-sdk');
+
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 exports.test = async (req, res) => {
