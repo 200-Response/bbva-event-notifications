@@ -15,7 +15,7 @@ provider:
   deploymentBucket:
     name: ${self:custom.${opt:stage, self:provider.stage}DeployBucket}
   apiGateway:
-    description: Nombre de la lambda a usar 
+    description: bbva-event-notifications - manejo de alertas y notificaciones
   iamManagedPolicies:
     - arn:aws:iam::aws:policy/AmazonS3FullAccess
     - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
@@ -43,7 +43,7 @@ functions:
     handler: handler.main
     timeout: 600 #
     name: bbva-event-notifications 
-    description: Nombre de la lambda a usar 
+    description: Función principal para el manejo de alertas y notificaciones 
     environment:
       BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
       TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
@@ -55,7 +55,7 @@ functions:
     handler: handler.eventHandlerForATriggerCall
     timeout: 900 #
     name: bbva-event-notifications-s3Trigger
-    description: Nombre de la lambda trigger 
+    description: Función para el manejo de alertas y notificaciones - trigger 
     environment:
       TEST_VARIABLE_0: ${self:custom.TEST_VARIABLE}
       BUCKET: ${self:custom.${opt:stage, self:provider.stage}BUCKET}
