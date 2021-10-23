@@ -45,6 +45,9 @@ exports.processSQSMessage = async (req) => {
   };
   console.log(paramsDynamo);
 
+  snsParams.Message = "Error id: "+ message_data.tpv_error_id + "\n" +
+  "example";
+
   try {
     response = await dynamoService.queryItem(paramsDynamo);
     console.log(response);
