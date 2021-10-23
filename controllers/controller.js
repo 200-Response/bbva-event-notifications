@@ -57,7 +57,7 @@ exports.processSQSMessage = async (req) => {
     
       snsParams.Message = "\n" + snsParams.Message +
       " Mensaje: " + response.Items[0].TPV_error_dynamo_order_key;
-      snsParams.Message = "\n" + snsParams.Message + "<div class="content">" +
+      snsParams.Message = "\n" + snsParams.Message + "<div>" +
       "<h1>This is a heading</h1>" +
       "<p>This is a paragraph of text.</p>" +
       "<p><strong>Note:</strong> If you don\'t escape quotes properly, it will not work.</p>" +"</div>";
