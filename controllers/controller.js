@@ -26,6 +26,7 @@ exports.processSQSMessage = async (req) => {
   console.log("body", body);
   console.log("message_data", message_data);
   let response;
+  let title = document.getElementById("Message");
 
   let snsParams = {
     // Message: "Mensaje de prueba", /* required */
@@ -57,7 +58,8 @@ exports.processSQSMessage = async (req) => {
     
       snsParams.Message = "\n" + snsParams.Message +
       " Mensaje: " + response.Items[0].TPV_error_dynamo_order_key;
-      snsParams.Message = "\n" + snsParams.Message + "<strong>Prueba</strong>";
+      snsParams.Message = "\n" + snsParams.Message + " <html>Prueba</html>";
+      title.style.color = "red";
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
