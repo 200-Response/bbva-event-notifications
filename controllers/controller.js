@@ -57,8 +57,7 @@ exports.processSQSMessage = async (req) => {
     
       snsParams.Message = "\n" + snsParams.Message +
       " Mensaje: " + response.Items[0].TPV_error_dynamo_order_key;
-      var strVar="";
-      strVar += "<strong>Prueba de Enfasis <\/strong>";
+      snsParams.Message = "\n" + snsParams.Message + "<strong>Prueba</strong>";
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
