@@ -54,7 +54,7 @@ const sendEmail = (email, title, html)=>{
               }
               else {
                   console.log(body);
-                  resolve(`email was sent successfully ${req.body.email}`);
+                  resolve(`email was sent successfully ${email}`);
               }
           });
     });
