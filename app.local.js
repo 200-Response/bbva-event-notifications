@@ -37,6 +37,7 @@ function sqsSendMsg(){
       "client": "bbva",
       "client_id": "bbva",
 	  "message_data": {
+      "source": process.env.BBVA_ERRORS_SQS,  
 		  "tpv_error_id": "75",
 		  "details": {
            "bin":"4000-0012-3456-7848",
