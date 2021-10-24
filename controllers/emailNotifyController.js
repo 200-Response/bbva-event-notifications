@@ -69,7 +69,6 @@ exports.addEmail = async(req,res) =>{
     let emailList =  await s3Service.getS3Object(bucket,'emailList.json');
     emailList = emailList.Body.toString('utf-8');
     emailList.split(',');
-    emailList.filter( item => item == email );
 
     if(emailList.length>0){
         return res.json('email was added successfully');
