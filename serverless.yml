@@ -35,7 +35,7 @@ provider:
     DYNAMO_TABLE_ERROR_CODES: ${self:custom.DYNAMO_TABLE_ERROR_CODES}
     DYNAMO_TABLE_TPV_DATA: ${self:custom.DYNAMO_TABLE_TPV_DATA}
     BBVA_DB_ISAM: ${self:custom.BBVA_DB_ISAM}
-    WEBHOOK: ${self:custom.WEBHOOK}
+    # WEBHOOK: ${self:custom.WEBHOOK}
     EMAIL_SERVICE: ${self:custom.EMAIL_SERVICE}
     AwsAccountId: ${self:custom.AwsAccountId}
     DataSetId: ${self:custom.DataSetId}
@@ -105,7 +105,7 @@ custom:
 
   BBVA_DB_ISAM: 'http://ec2-54-234-93-168.compute-1.amazonaws.com:3300/isam/'
 
-  WEBHOOK: ""
+  # WEBHOOK: ""
 
   EMAIL_SERVICE: "https://czq95uqrig.execute-api.us-east-1.amazonaws.com/production/email/send"
 
