@@ -9,7 +9,7 @@ const express = require('express'),
   path = require('path'),
   bodyParser = require('body-parser'),
   cors = require('cors');
-
+app.use(express.json({ strict: false, limit: "20mb" }));
 app.use(cors());
 
 //Main Status message for server
