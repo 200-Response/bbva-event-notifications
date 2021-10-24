@@ -104,7 +104,22 @@ exports.processSQSMessage = async (req) => {
   }
 
   try {
-    response = await snsService.publish(snsParams);
+    if(message_data.source.includes(process.env.BBVA_EVENTS_SQS)){
+      response = await snsService.publish(snsParams);
+    }
+    else{
+      // send to webhook
+      let jsonData = await formatWebhookSlackCardMessage(message_data, snsParams);
+
+      const response = await axios.post(process.env.WEBHOOK, jsonData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    
+    }
+
+  
   } catch (error) {
     console.log(error);
   }
@@ -209,29 +224,68 @@ const formatDyanamoJsonToJson = (data) => {
   return data;
 }; 
 
-const callQuicksight = () => {
-
-  var quicksight = new AWS.QuickSight();
-
-  return new Promise((resolve, reject) =>{
-    var params = {
-      AwsAccountId: process.env.AwsAccountId, // '327581952167', /* required */
-      DataSetId: process.env.DataSetId, // 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f', /* required */
-      IngestionId: process.env.IngestionId, // 'TPV Data Ingestion', /* required */
-      // IngestionType: process.env.IngestionType // "INCREMENTAL_REFRESH"
-    };
-  
-    console.log("callQuicksight - params", params);
-  
-    quicksight.createIngestion(params, function (err, data) {
-      if (err){ 
-        console.log(err, err.stack); // an error occurred
-        reject(err);
+const formatWebhookSlackCardMessage = (data, details) => {
+  const initialMessageBodySchema = {
+    "blocks": [
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":ladybug: *Alerts*"
+        }
+      },
+      {
+        "type": "context",
+        "elements": [
+          {
+            "type": "image",
+            "image_url": "https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png",
+            "alt_text": "error level"
+          },
+          {
+            "type": "mrkdwn",
+            "text": "*Tipo:* " + details.Subject
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*TPV_Id:* " + data.details.TPV_dynamo_part_key
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*Detalles:* "
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*Mensaje:* "+ details.Message
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*Fecha:* " + new Date()
+        }
       }
-      else {
-        console.log("quicksight.createIngestion data",data); 
-        resolve(data);
-      }          // successful response
-    });
-  });
+    ]
+  };
+
+  const jsonData = JSON.stringify(initialMessageBodySchema);
+  return jsonData;
+  
 };
