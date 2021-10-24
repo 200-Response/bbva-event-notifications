@@ -28,6 +28,7 @@ exports.send = async (req, res) => {
         emailList = emailList.Body.toString('utf-8');
         emailList = emailList.split(',');
         for(let i=0;i<emailList.length;i++){
+            console.log('enviando ',emailList[i]);
             await sendEmail(emailList[i],req.body.title,req.body.html);
         }
     }
