@@ -131,7 +131,7 @@ exports.getS3Object = (bucket, key) => {
       Bucket: bucket,
       Key: key
     }, (error, data) =>{
-      if(error) return reject(error);
+      if(error) {console.log(error); return reject(error)};
       // console.log(data);
       if(data){
         // result = JSON.parse( data.Body.toString('utf-8') );
