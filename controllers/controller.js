@@ -79,14 +79,14 @@ exports.processSQSMessage = async (req) => {
     
       snsParams.Message = "\n" + snsParams.Message +
       " Mensaje: " + response.Items[0].TPV_error_dynamo_order_key;
-      snsParams.Message = "\n" + snsParams.Message + "<div>" +
-      "<h1>This is a heading</h1>" +
-      "<p>This is a paragraph of text.</p>" +
-      "<p><strong>Note:</strong> If you don\'t escape quotes properly, it will not work.</p>" +"</div>";
-      
       if(typeof message_data.details.comercio_name !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
         "Nombre del comercio: " + message_data.details.comercio_name;
+      }
+      
+      if(typeof message_data.details.bin !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Nombre del bin: " + message_data.details.bin;
       }
 
       snsParams.Subject = response.Items[0].SNS_Topic;
