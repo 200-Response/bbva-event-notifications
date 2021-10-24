@@ -41,7 +41,7 @@ exports.addEmail = async(req,res) =>{
     let email = req.body.email;
     let bucket = 'bbva-los4-siniestros';
     let emailList =  await s3Service.getS3Object(bucket,'emailList.json');
-    emailList = JSON.parse( emailList.Body.toString('utf-8') );
+    emailList = emailList.Body.toString('utf-8');
     console.log(emailList);
     res.json(emailList);
 }
