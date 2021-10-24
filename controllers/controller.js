@@ -84,6 +84,11 @@ exports.processSQSMessage = async (req) => {
       "<p>This is a paragraph of text.</p>" +
       "<p><strong>Note:</strong> If you don\'t escape quotes properly, it will not work.</p>" +"</div>";
       
+      if(typeof message_data.details.comercio_name !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Nombre del comercio: " + message_data.details.comercio_name;
+      }
+
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
@@ -100,12 +105,6 @@ exports.processSQSMessage = async (req) => {
   }
 
   return;
-  // let responseObj = {
-  //   status:'success',
-  //   message: 'test controller'
-  // };
-  // console.log(responseObj);
-  // res.json(responseObj);
 };
 
 exports.processDynamoMessage = async (req) => {
