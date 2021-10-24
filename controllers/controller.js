@@ -75,16 +75,16 @@ exports.processSQSMessage = async (req) => {
 
   let emailParams = {
     title: "",
-    html: '<table width="100%" style="background: #202027;">\n'+ '<tr>\n' + '<td>\n' +
+    html: '<table width="100%" style="background: #ffffff;">\n'+ '<tr>\n' + '<td>\n' +
     '<table align="center" width="600px" height="200px;" style="width:600px; height:200px;">\n'+ '<tr>\n' +
-    '<td  style="background: linear-gradient(to right, #5ABCFD, #082247);">\n' +
-    '<p style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:55px; padding:20px;">\n'+
-    '<span style="font-size:70px;font-weight:bold;"> [ </span>\n'+
-    'BBVA Bancomer 2021\n'+
-    '<span style="font-size:70px;font-weight:bold;">  ] </span>\n'+
+    '<td align="center" style="background: #5ABCFD;">\n' +
+    '<p style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:25px; padding:20px;">\n'+
+    '<span style="font-size:30px;font-weight:bold;"> [ </span>\n'+
+    'BBVA Hackaton 2021\n'+
+    '<span style="font-size:30px;font-weight:bold;">  ] </span>\n'+
     '</p>\n'+ '</td>\n' + '</tr>\n' +
-    '<tr>\n' + '<td align="left" style="background: linear-gradient(to right, #5ABCFD, #082247);">\n' +
-    '<ul  style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:25px; padding:20px;">'
+    '<tr>\n' + '<td align="left" style="background: #ffffff;">\n' +
+    '<ul  style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:14px; padding:20px;">'
   };
 
   let paramsDynamo = {
