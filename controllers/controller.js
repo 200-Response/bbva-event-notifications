@@ -68,7 +68,7 @@ exports.processSQSMessage = async (req) => {
   console.log(paramsDynamo);
 
   snsParams.Message = "Error id: "+ message_data.tpv_error_id + "\n" +
-  "example";
+  "";
   
 
   try {
@@ -84,9 +84,14 @@ exports.processSQSMessage = async (req) => {
         "Nombre del comercio: " + message_data.details.comercio_name;
       }
       
+      if(typeof message_data.details.ipAddress !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Direccion IP: " + message_data.details.ipAddress;
+      }
+
       if(typeof message_data.details.bin !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
-        "Nombre del bin: " + message_data.details.bin;
+        "Bin: " + message_data.details.bin;
       }
 
       snsParams.Subject = response.Items[0].SNS_Topic;
