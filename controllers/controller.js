@@ -117,6 +117,8 @@ exports.processSQSMessage = async (req) => {
       emailParams.html = newMsg.html;
       emailParams.title = response.Items[0].SNS_Topic;
 
+      console.log("emailParams.html", emailParams.html);
+
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
