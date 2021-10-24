@@ -9,7 +9,7 @@ const Mailgun = require('mailgun-js');
 
 const AWS = require('aws-sdk');
  var api_key = process.env.MAILGUN_KEY;
- var domain = '200response.mx';
+ var domain = 'mg.200response.mx';
  var from_who = 'info@200response.mx';
 
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
