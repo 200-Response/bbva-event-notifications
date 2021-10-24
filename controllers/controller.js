@@ -67,8 +67,7 @@ exports.processSQSMessage = async (req) => {
   };
   console.log(paramsDynamo);
 
-  snsParams.Message = "Error id: "+ message_data.tpv_error_id + "\n" +
-  "";
+  snsParams.Message = "Error ID: "+ message_data.tpv_error_id + "\n";
   
 
   try {
@@ -78,7 +77,7 @@ exports.processSQSMessage = async (req) => {
 
     
       snsParams.Message = "\n" + snsParams.Message +
-      " Mensaje: " + response.Items[0].TPV_error_dynamo_order_key;
+      "Estado: " + response.Items[0].TPV_error_dynamo_order_key;
       if(typeof message_data.details.comercio_name !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
         "Nombre del comercio: " + message_data.details.comercio_name;
@@ -99,9 +98,70 @@ exports.processSQSMessage = async (req) => {
         "Bin: " + message_data.details.bin;
       }
       
+        if(typeof message_data.details.transactionId !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "ID de Transacción: " + message_data.details.transactionId;
+      }
+
+      if(typeof message_data.details.comercio_city !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Ciudad: " + message_data.details.comercio_city;
+      }
+
+      if(typeof message_data.details.comercio_zipcode !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "CP: " + message_data.details.comercio_zipcode;
+      }
+
+      if(typeof message_data.details.comercio_state !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Estado: " + message_data.details.comercio_state;
+      }
+
+      if(typeof message_data.details.cliente_country !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Pais: " + message_data.details.cliente_country;
+      }
+
+      if(typeof message_data.details.comercio_street !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Calle: " + message_data.details.comercio_street;
+      }
+
       if(typeof message_data.details.comercio_latitude !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
         "Latitud: " + message_data.details.comercio_latitude;
+      }
+
+      if(typeof message_data.details.comercio_longitude !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Longitud: " + message_data.details.comercio_longitude
+        + "\n" + "\n";
+      }
+
+      if(typeof message_data.ISAM.serie !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Serie TPV: " + message_data.ISAM.serie;
+      }
+
+      if(typeof message_data.ISAM.equipo !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Equipo TPV: " + message_data.ISAM.equipo;
+      }
+
+      if(typeof message_data.ISAM.marca !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Marca TPV: " + message_data.ISAM.marca;
+      }
+
+      if(typeof message_data.ISAM.modelo !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Modelo TPV: " + message_data.ISAM.modelo;
+      }
+
+      if(typeof message_data.ISAM.estatus !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Estatus TPV: " + message_data.ISAM.estatus;
       }
 
       snsParams.Subject = response.Items[0].SNS_Topic;
