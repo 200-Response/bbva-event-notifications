@@ -71,7 +71,9 @@ exports.addEmail = async(req,res) =>{
     emailList = emailList.split(',');
     console.log(emailList);
 
-    if(emailList.length>0){
+    let found = emailList.filter( item =>item == email );
+
+    if(found.length>0){
         console.log('first email success');
         return res.json(emailList);
     }
