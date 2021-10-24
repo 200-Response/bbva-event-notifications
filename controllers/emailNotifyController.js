@@ -21,7 +21,7 @@ exports.send = async (req, res) => {
 
     if(req.body.email){
         console.log('sending single email');
-        sendEmail(req.body.email,req.body.title,req.body.html);
+        await sendEmail(req.body.email,req.body.title,req.body.html);
     }else{
         console.log('sending multiple emails');
         let emailList =  await s3Service.getS3Object(bucket,'emailList.json');
@@ -38,7 +38,7 @@ exports.send = async (req, res) => {
 
 
 const sendEmail = (email, title, html)=>{
-    new Promise(  (resolve,reject) => {
+    return new Promise(  (resolve,reject) => {
         let mailgun = new Mailgun({apiKey: api_key, domain: domain});
 
         let data = {
