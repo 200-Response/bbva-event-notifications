@@ -105,13 +105,16 @@ exports.processSQSMessage = async (req) => {
     console.log(response);
     if (response.Count > 0) {
 
-      emailParams.html = "<p>"+"Estado: " + response.Items[0].TPV_error_dynamo_order_key+"</p>";
+      // emailParams.html = "<p>"+"Estado: " + response.Items[0].TPV_error_dynamo_order_key+"</p>";
+      emailParams.html = emailParams.html + '<li>Error ID: '+response.Items[0].TPV_error_dynamo_order_key+'</li>';
       
       snsParams.Message = "\n" + snsParams.Message +
       "Estado: " + response.Items[0].TPV_error_dynamo_order_key;
       
-      let newMsg  = formatMessage(snsParams, message_data);
-      snsParams.Message = newMsg;
+      let newMsg  = formatMessage(snsParams, message_data, emailParams.html);
+      snsParams.Message = newMsg.Message;
+      
+      emailParams.html = newMsg.html;
       
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
@@ -243,14 +246,13 @@ const formatDyanamoJsonToJson = (data) => {
   return data;
 }; 
 
-const formatMessage = (snsParams, message_data) => {
+const formatMessage = (snsParams, message_data, html) => {
 
   if(typeof message_data.details.comercio_name !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Nombre del comercio: " + message_data.details.comercio_name;
 
-    emailParams.html = emailParams.html + "<br/>" +
-    "<p>Nombre del comercio: " + message_data.details.comercio_name+"</p>";;
+    html = html + '<li>Nombre del comercio: '+message_data.details.comercio_name+'</li>';
   }
   
   if(typeof message_data.details.serialNumberTpv !== 'undefined'){
@@ -379,7 +381,9 @@ const formatMessage = (snsParams, message_data) => {
 
   console.log("snsParams.Message",snsParams.Message);
 
-  return snsParams.Message;
+  html = html + '</ul> </div> </div>';
+
+  return {Message: snsParams.Message, html: html};
 
 };
 
@@ -420,13 +424,13 @@ const formatWebhookSlackCardMessage = (data, details) => {
       {
         "type": "divider"
       },
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "*Detalles:* "
-        }
-      },
+      // {
+      //   "type": "section",
+      //   "text": {
+      //     "type": "mrkdwn",
+      //     "text": "*Detalles:* "
+      //   }
+      // },
       {
         "type": "section",
         "text": {
