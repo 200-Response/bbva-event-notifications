@@ -75,13 +75,15 @@ exports.processSQSMessage = async (req) => {
 
   let emailParams = {
     title: "",
-    html: '<div height="250px;" style="background: #1D1D1D;display: flex;justify-content: center; align-items: center; height:250px;">\n'+
-    '<div width="600px" height="800px;" style="background: linear-gradient(to right, #5ABCFD, #082247); width:600px; height:250px; align-content: space-between;">\n'+
+    html: '<table width="100%" style="background: #202027;">\n'+ '<tr>\n' + '<td>\n' +
+    '<table align="center" width="600px" height="200px;" style="width:600px; height:200px;">\n'+ '<tr>\n' +
+    '<td  style="background: linear-gradient(to right, #5ABCFD, #082247);">\n' +
     '<p style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:55px; padding:20px;">\n'+
     '<span style="font-size:70px;font-weight:bold;"> [ </span>\n'+
-    'Te encuentras en Lambda de Correos!\n'+
+    'BBVA Bancomer 2021\n'+
     '<span style="font-size:70px;font-weight:bold;">  ] </span>\n'+
-    '</p>\n'+
+    '</p>\n'+ '</td>\n' + '</tr>\n' +
+    '<tr>\n' + '<td align="left" style="background: linear-gradient(to right, #5ABCFD, #082247);">\n' +
     '<ul  style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:25px; padding:20px;">'
   };
 
@@ -267,82 +269,114 @@ const formatMessage = (snsParams, message_data, html) => {
   if(typeof message_data.details.serialNumberTpv !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "SN TPV: " + message_data.details.serialNumberTpv;
+
+    html = html + '<li>SN TPV: '+message_data.details.serialNumberTpv+'</li>';
   }
   
   if(typeof message_data.details.ipAddress !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Direccion IP: " + message_data.details.ipAddress;
+
+    html = html + '<li>Direccion IP: '+message_data.details.ipAddress+'</li>';
   }
 
   if(typeof message_data.details.bin !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Bin: " + message_data.details.bin;
+
+    html = html + '<li>Bin: '+message_data.details.bin+'</li>';
   }
   
     if(typeof message_data.details.transactionId !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "ID de Transacción: " + message_data.details.transactionId;
+
+    html = html + '<li>ID de Transacción: '+message_data.details.transactionId+'</li>';
   }
 
   if(typeof message_data.details.comercio_city !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Ciudad: " + message_data.details.comercio_city;
+
+    html = html + '<li>Ciudad: '+message_data.details.comercio_city+'</li>';
   }
 
   if(typeof message_data.details.comercio_zipcode !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "CP: " + message_data.details.comercio_zipcode;
+
+    html = html + '<li>CP: '+message_data.details.comercio_zipcode+'</li>';
   }
 
   if(typeof message_data.details.comercio_state !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Estado: " + message_data.details.comercio_state;
+
+    html = html + '<li>Estado: '+message_data.details.comercio_state+'</li>';
   }
 
   if(typeof message_data.details.cliente_country !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Pais: " + message_data.details.cliente_country;
+
+    html = html + '<li>Pais: '+message_data.details.cliente_country+'</li>';
   }
 
   if(typeof message_data.details.comercio_street !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Calle: " + message_data.details.comercio_street;
+
+    html = html + '<li>Calle: '+message_data.details.comercio_street+'</li>';
   }
 
   if(typeof message_data.details.comercio_latitude !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Latitud: " + message_data.details.comercio_latitude;
+
+    html = html + '<li>Latitud: '+message_data.details.comercio_latitude+'</li>';
   }
 
   if(typeof message_data.details.comercio_longitude !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Longitud: " + message_data.details.comercio_longitude
     + "\n" + "\n";
+
+    html = html + '<li>Longitud: '+message_data.details.comercio_longitude+'</li>';
   }
 
   if(typeof message_data.details.ISAM.serie !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Serie TPV: " + message_data.details.ISAM.serie;
+
+    html = html + '<li>Serie TPV: '+message_data.details.ISAM.serie+'</li>';
   }
 
   if(typeof message_data.details.ISAM.equipo !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Equipo TPV: " + message_data.details.ISAM.equipo;
+
+    html = html + '<li>Equipo TPV: '+message_data.details.ISAM.equipo+'</li>';
   }
 
   if(typeof message_data.details.ISAM.marca !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Marca TPV: " + message_data.details.ISAM.marca;
+
+    html = html + '<li>Marca TPV: '+message_data.details.ISAM.marca+'</li>';
   }
 
   if(typeof message_data.details.ISAM.modelo !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Modelo TPV: " + message_data.details.ISAM.modelo;
+
+    html = html + '<li>Modelo TPV: '+message_data.details.ISAM.modelo+'</li>';
   }
 
   if(typeof message_data.details.ISAM.estatus !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Estatus TPV: " + message_data.details.ISAM.estatus;
+
+    html = html + '<li>Estatus TPV: '+message_data.details.ISAM.estatus+'</li>';
   }
 
   if(typeof message_data.details.cliente_state !== 'undefined'){
@@ -350,47 +384,67 @@ const formatMessage = (snsParams, message_data, html) => {
     "\n" +
     "Datos del cliente \n" +
     "Estado: " + message_data.details.cliente_state;
+
+    html = html + '<li>Estado: '+message_data.details.cliente_state+'</li>';
   }
   if(typeof message_data.details.cliente_city !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Ciudad: " + message_data.details.cliente_city;
+
+    html = html + '<li>Ciudad: '+message_data.details.cliente_city+'</li>';
   }
   if(typeof message_data.details.cliente_zipcode !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Código postal: " + message_data.details.cliente_zipcode;
+
+    html = html + '<li>Codigo postal: '+message_data.details.cliente_zipcode+'</li>';
   }
   if(typeof message_data.details.cliente_street !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Dirección: " + message_data.details.cliente_street;
+
+    html = html + '<li>Direccion: '+message_data.details.cliente_street+'</li>';
   }
   if(typeof message_data.details.cliente_firstName !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Nombre: " + message_data.details.cliente_firstName;
+
+    html = html + '<li>Nombre: '+message_data.details.cliente_firstName+'</li>';
   }
   if(typeof message_data.details.cliente_lastName !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Apellidos: " + message_data.details.cliente_lastName;
+
+    html = html + '<li>Apellidos: '+message_data.details.cliente_lastName+'</li>';
   }
   if(typeof message_data.details.transactionAmount !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Monto de la transacción: " + message_data.details.transactionAmount;
+
+    html = html + '<li>Monto de la transacción: '+message_data.details.transactionAmount+'</li>';
   }
   if(typeof message_data.details.cliente_phone !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Teléfono: " + message_data.details.cliente_phone;
+
+    html = html + '<li>Teléfono: '+message_data.details.cliente_phone+'</li>';
   }
   if(typeof message_data.details.cliente_account !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Cuenta: " + message_data.details.cliente_account;
+
+    html = html + '<li>Cuenta: '+message_data.details.cliente_account+'</li>';
   }
   if(typeof message_data.details.cliente_accountName !== 'undefined'){
     snsParams.Message = snsParams.Message + "\n" + 
     "Nombre de cuenta: " + message_data.details.cliente_accountName;
+
+    html = html + '<li>Nombre de cuenta: '+message_data.details.cliente_accountName+'</li>';
   }
 
   console.log("snsParams.Message",snsParams.Message);
 
-  html = html + '</ul> </div> </div>';
+  html = html + '</ul></td> </tr> </table></td> </tr> </table>';
 
   return {Message: snsParams.Message, html: html};
 
