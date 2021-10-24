@@ -77,7 +77,7 @@ functions:
       - schedule: 
           name: quicksight-cron-job
           description: 'Cron job Función para llamar quicksight.createIngestion 1 min'
-          rate: rate(1 minutes)
+          rate: rate(2 minutes)
           enabled: true
 
 
@@ -104,5 +104,5 @@ custom:
 
   AwsAccountId: '327581952167'
   DataSetId: 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f'
-  IngestionId: 'TPV_Data_Ingestion'
+  IngestionId: 'TPV_Data_Ingestion_v2'
   IngestionType: 'INCREMENTAL_REFRESH'
