@@ -7,7 +7,7 @@ const initialMessageBodySchema = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": ":ladybug: *Error Logger*"
+                "text": ":ladybug: *Alerts*"
             }
         },
         {
@@ -28,7 +28,14 @@ const initialMessageBodySchema = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "*Cliente:* \n *Tienda:*"
+                "text": "*TPV_id:*"
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*Ubicación:*"
             }
         },
         {
@@ -38,26 +45,21 @@ const initialMessageBodySchema = {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "*Aplicación:* - *Servicio:* blp-client-meta\n*Archivo:* transactionController.js\n*Función:* startCheckout( )\n*Entrada:* {id:2312qweaewe, orderId:er3442342r}"
-            },
-			"accessory": {
-				"type": "image",
-				"image_url": "https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png",
-				"alt_text": "computer thumbnail"
-			}
-        },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "*Mensaje:* The specified key does not exist."
+                "text": "*Detalles:* "
             }
         },
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "*Entorno:* \n*Fecha:* 2021-08-04T21:23:34Z34"
+                "text": "*Mensaje:* "
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*Fecha:* 2021-08-04T21:23:34Z34"
             }
         }
     ]
