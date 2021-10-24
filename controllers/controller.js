@@ -10,6 +10,30 @@ const AWS = require('aws-sdk');
 
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
+const alerts_limit = 5;
+
+process.env.events.counter = [
+  'bbva-alert-tpv-collect-card',
+  'bbva-alert-tpv-unsupported-function',	
+  'bbva-alert-tpv-amount-invalid',	
+  'bbva-alert-tpv-card-expired',	
+  'bbva-alert-tpv-retry',
+  'bbva-alert-tpv-exceeded-nip-attempts',		
+  'bbva-alert-tpv-rejected',
+  'bbva-alert-tpv-declined',
+];
+
+process.env.events.counterBlock = {
+  'bbva-alert-tpv-collect-card': alerts_limit,
+  'bbva-alert-tpv-unsupported-function': alerts_limit,	
+  'bbva-alert-tpv-amount-invalid': alerts_limit,	
+  'bbva-alert-tpv-card-expired': alerts_limit,	
+  'bbva-alert-tpv-retry': alerts_limit,
+  'bbva-alert-tpv-exceeded-nip-attempts': alerts_limit,		
+  'bbva-alert-tpv-rejected': alerts_limit,
+  'bbva-alert-tpv-declined': alerts_limit,
+};
+
 exports.test = async (req, res) => {
   let responseObj = {
     status:'success',
@@ -27,43 +51,6 @@ exports.processSQSMessage = async (req) => {
 
   console.log("body", body);
   console.log("message_data", message_data);
-
-  // {
-    //   "TPV_dynamo_part_key": "MX0000_526",
-    //   "ipAddress": "210.141.60.181",
-    //   "comercio_longitude": "-86.87380453",
-    //   "comercio_city": "Cancún",
-    //   "comercio_zipcode": "",
-    //   "comercio_latitude": "21.18126615",
-    //   "comercio_state": "QUINTANA ROO",
-    //   "statusCode": "03",
-    //   "transactionId": "1gU7CJ4QUWmE1dFVpqREFcfFej9pTjJuk",
-    //   "comercio_name": "CERVEFRIO",
-    //   "cliente_country": "MX",
-    //   "serialNumberTpv": "MX0000_526",
-    //   "comercio_street": "JUAN DE LA BARRERA",
-    //   "bin": "4000-0012-3456-2669",
-
-  //   "TPV_dynamo_order_key": 1635033302913,
-  //   "timestamp": 1635033302913,
-  
-  //   "comercio_country": "MX",
-  //   "cliente_state": "Chihuahua",
-  //   "cliente_city": "Alcántarbury",
-  //   "cliente_zipcode": "82729",
-  //   "cliente_street": "4313 Miranda Caserio",
-  //   "cliente_firstName": "Jerónimo",
-  //   "cliente_lastName": "Jaime",
-  //   "cliente_longitude": "109.3821",
-  //   "cliente_latitude": "-7.8969",
-  //   "transactionAmount": 59079,
-  //   "cliente_phone": "554 690 192",
-  //   "cliente_account": "40641804",
-  //   "cliente_created": "2021-01-14T15:34:21.846Z",
-  //   "cliente_gender": "Agender",
-  //   "cliente_accountName": "Personal Loan Account"
-  
-  //  }
 
   let response;
 
@@ -133,12 +120,17 @@ exports.processSQSMessage = async (req) => {
   try {
     if(message_data.source.includes(process.env.BBVA_EVENTS_SQS)){
       // response = await snsService.publish(snsParams);
-
-      const response = await axios.post(process.env.EMAIL_SERVICE, emailParams, {
-        headers: {
-          'Content-Type': 'application/json'
+      if(process.env.events.counter.includes(snsParams.Subject)){
+        if (process.env.events.counterBlock[snsParams.Subject]>0) {
+          process.env.events.counterBlock[snsParams.Subject] = process.env.events.counterBlock[snsParams.Subject] - 1;
+          
+          const response = await axios.post(process.env.EMAIL_SERVICE, emailParams, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
         }
-      });
+      }
     }
     else{
       // send to webhook

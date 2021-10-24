@@ -41,6 +41,7 @@ provider:
     DataSetId: ${self:custom.DataSetId}
     IngestionId: ${self:custom.IngestionId}
     IngestionType: ${self:custom.IngestionType}
+    TARGET_ALERT: ${self:custom.TARGET_ALERT}
 
 functions:
   main:
@@ -106,6 +107,7 @@ custom:
   BBVA_DB_ISAM: 'http://ec2-54-234-93-168.compute-1.amazonaws.com:3300/isam/'
 
   # WEBHOOK: ""
+  TARGET_ALERT: bbva-alert-tpv-declined
 
   EMAIL_SERVICE: "https://czq95uqrig.execute-api.us-east-1.amazonaws.com/production/email/send"
 
