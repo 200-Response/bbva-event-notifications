@@ -75,7 +75,14 @@ exports.processSQSMessage = async (req) => {
 
   let emailParams = {
     title: "",
-    html: ""
+    html: '<div height="250px;" style="background: #1D1D1D;display: flex;justify-content: center; align-items: center; height:250px;">\n'+
+    '<div width="600px" height="800px;" style="background: linear-gradient(to right, #5ABCFD, #082247); width:600px; height:250px; align-content: space-between;">\n'+
+    '<p style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:55px; padding:20px;">\n'+
+    '<span style="font-size:70px;font-weight:bold;"> [ </span>\n'+
+    'Te encuentras en Lambda de Correos!\n'+
+    '<span style="font-size:70px;font-weight:bold;">  ] </span>\n'+
+    '</p>\n'+
+    '<ul  style="font-family:Arial, Tahoma, Verdana, sans-serif;color:#000000;font-weight:normal;font-size:25px; padding:20px;">'
   };
 
   let paramsDynamo = {
@@ -103,8 +110,9 @@ exports.processSQSMessage = async (req) => {
       snsParams.Message = "\n" + snsParams.Message +
       "Estado: " + response.Items[0].TPV_error_dynamo_order_key;
       
-      snsParams.Message = formatMessage(snsParams, message_data);
-
+      let newMsg  = formatMessage(snsParams, message_data);
+      snsParams.Message = newMsg;
+      
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
@@ -368,6 +376,9 @@ const formatMessage = (snsParams, message_data) => {
     snsParams.Message = snsParams.Message + "\n" + 
     "Nombre de cuenta: " + message_data.details.cliente_accountName;
   }
+
+  console.log("snsParams.Message",snsParams.Message);
+
   return snsParams.Message;
 
 };

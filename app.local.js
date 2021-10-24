@@ -59,7 +59,22 @@ function sqsSendMsg(){
            "timestamp":"1635033308189",
            "ISAM":{
               
-           }
+           },
+           "comercio_country": "MX",
+          "cliente_state": "Chihuahua",
+          "cliente_city": "Alcántarbury",
+          "cliente_zipcode": "82729",
+          "cliente_street": "4313 Miranda Caserio",
+          "cliente_firstName": "Jerónimo",
+          "cliente_lastName": "Jaime",
+          "cliente_longitude": "109.3821",
+          "cliente_latitude": "-7.8969",
+          "transactionAmount": 59079,
+          "cliente_phone": "554 690 192",
+          "cliente_account": "40641804",
+          "cliente_created": "2021-01-14T15:34:21.846Z",
+          "cliente_gender": "Agender",
+          "cliente_accountName": "Personal Loan Account"
         }
 	  }
   };
