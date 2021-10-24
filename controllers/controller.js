@@ -12,7 +12,7 @@ var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 const alerts_limit = 5;
 
-process.env.events.counter = [
+process.env.events_counter = [
   'bbva-alert-tpv-collect-card',
   'bbva-alert-tpv-unsupported-function',	
   'bbva-alert-tpv-amount-invalid',	
@@ -23,7 +23,7 @@ process.env.events.counter = [
   'bbva-alert-tpv-declined',
 ];
 
-process.env.events.counterBlock = {
+process.env.events_counterBlock = {
   'bbva-alert-tpv-collect-card': alerts_limit,
   'bbva-alert-tpv-unsupported-function': alerts_limit,	
   'bbva-alert-tpv-amount-invalid': alerts_limit,	
@@ -33,6 +33,9 @@ process.env.events.counterBlock = {
   'bbva-alert-tpv-rejected': alerts_limit,
   'bbva-alert-tpv-declined': alerts_limit,
 };
+
+process.env.error_counterBlock = alerts_limit + alerts_limit;
+process.env.alerts_counterBlockLimit = alerts_limit;
 
 exports.test = async (req, res) => {
   let responseObj = {
@@ -120,10 +123,14 @@ exports.processSQSMessage = async (req) => {
   try {
     if(message_data.source.includes(process.env.BBVA_EVENTS_SQS)){
       // response = await snsService.publish(snsParams);
-      if(process.env.events.counter.includes(snsParams.Subject)){
-        if (process.env.events.counterBlock[snsParams.Subject]>0) {
-          process.env.events.counterBlock[snsParams.Subject] = process.env.events.counterBlock[snsParams.Subject] - 1;
-          
+      console.log("process.env.events_counter", process.env.events_counter);
+      console.log("snsParams.Subject", snsParams.Subject);
+      
+      if(process.env.events_counter.includes(snsParams.Subject)){
+        console.log("process.env.alerts_counterBlockLimit",process.env.alerts_counterBlockLimit);
+        if (process.env.alerts_counterBlockLimit>0) {
+          process.env.alerts_counterBlockLimit = process.env.alerts_counterBlockLimit - 1;
+
           const response = await axios.post(process.env.EMAIL_SERVICE, emailParams, {
             headers: {
               'Content-Type': 'application/json'
@@ -134,13 +141,18 @@ exports.processSQSMessage = async (req) => {
     }
     else{
       // send to webhook
-      let jsonData = await formatWebhookSlackCardMessage(message_data, snsParams);
-
-      const response = await axios.post(process.env.WEBHOOK, jsonData, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      console.log("process.env.error_counterBlock", process.env.error_counterBlock);
+      
+      if (process.env.error_counterBlock>0) {
+        process.env.error_counterBlock = process.env.error_counterBlock - 1;
+        let jsonData = await formatWebhookSlackCardMessage(message_data, snsParams);
+  
+        const response = await axios.post(process.env.WEBHOOK, jsonData, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }
     
     }
 
