@@ -139,29 +139,29 @@ exports.processSQSMessage = async (req) => {
         + "\n" + "\n";
       }
 
-      if(typeof message_data.ISAM.serie !== 'undefined'){
+      if(typeof message_data.details.ISAM.serie !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
-        "Serie TPV: " + message_data.ISAM.serie;
+        "Serie TPV: " + message_data.details.ISAM.serie;
       }
 
-      if(typeof message_data.ISAM.equipo !== 'undefined'){
+      if(typeof message_data.details.ISAM.equipo !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
-        "Equipo TPV: " + message_data.ISAM.equipo;
+        "Equipo TPV: " + message_data.details.ISAM.equipo;
       }
 
-      if(typeof message_data.ISAM.marca !== 'undefined'){
+      if(typeof message_data.details.ISAM.marca !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
-        "Marca TPV: " + message_data.ISAM.marca;
+        "Marca TPV: " + message_data.details.ISAM.marca;
       }
 
-      if(typeof message_data.ISAM.modelo !== 'undefined'){
+      if(typeof message_data.details.ISAM.modelo !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
-        "Modelo TPV: " + message_data.ISAM.modelo;
+        "Modelo TPV: " + message_data.details.ISAM.modelo;
       }
 
-      if(typeof message_data.ISAM.estatus !== 'undefined'){
+      if(typeof message_data.details.ISAM.estatus !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
-        "Estatus TPV: " + message_data.ISAM.estatus;
+        "Estatus TPV: " + message_data.details.ISAM.estatus;
       }
 
       snsParams.Subject = response.Items[0].SNS_Topic;
