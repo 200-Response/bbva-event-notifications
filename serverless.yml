@@ -105,7 +105,7 @@ custom:
 
   BBVA_DB_ISAM: 'http://ec2-54-234-93-168.compute-1.amazonaws.com:3300/isam/'
 
-  WEBHOOK: "https://hooks.slack.com/services/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"
+  WEBHOOK: ""
 
   EMAIL_SERVICE: "https://czq95uqrig.execute-api.us-east-1.amazonaws.com/production/email/send"
 
