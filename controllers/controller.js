@@ -55,6 +55,11 @@ exports.processSQSMessage = async (req) => {
     // TopicArn: ''
   };
 
+  let emailParams = {
+    title: "",
+    html: ""
+  };
+
   let paramsDynamo = {
     TableName : process.env.DYNAMO_TABLE_ERROR_CODES,
     KeyConditionExpression: "#zc = :zz",
@@ -78,9 +83,15 @@ exports.processSQSMessage = async (req) => {
     
       snsParams.Message = "\n" + snsParams.Message +
       "Estado: " + response.Items[0].TPV_error_dynamo_order_key;
+
+      emailParams.html = "<p>"+"Estado: " + response.Items[0].TPV_error_dynamo_order_key+"</p>";
+
       if(typeof message_data.details.comercio_name !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
         "Nombre del comercio: " + message_data.details.comercio_name;
+
+        emailParams.html = emailParams.html + "<br/>" +
+        "<p>Nombre del comercio: " + message_data.details.comercio_name+"</p>";;
       }
       
       if(typeof message_data.details.serialNumberTpv !== 'undefined'){
