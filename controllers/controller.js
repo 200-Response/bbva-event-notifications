@@ -84,6 +84,11 @@ exports.processSQSMessage = async (req) => {
         "Nombre del comercio: " + message_data.details.comercio_name;
       }
       
+      if(typeof message_data.details.serialNumberTpv !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "SN TPV: " + message_data.details.serialNumberTpv;
+      }
+      
       if(typeof message_data.details.ipAddress !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
         "Direccion IP: " + message_data.details.ipAddress;
@@ -92,6 +97,11 @@ exports.processSQSMessage = async (req) => {
       if(typeof message_data.details.bin !== 'undefined'){
         snsParams.Message = snsParams.Message + "\n" + 
         "Bin: " + message_data.details.bin;
+      }
+      
+      if(typeof message_data.details.comercio_latitude !== 'undefined'){
+        snsParams.Message = snsParams.Message + "\n" + 
+        "Latitud: " + message_data.details.comercio_latitude;
       }
 
       snsParams.Subject = response.Items[0].SNS_Topic;
