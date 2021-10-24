@@ -192,7 +192,7 @@ exports.processDynamoMessage = async (req) => {
 
 const sendSQSMessage = (statusCode, data) => {
   
-  const errorCodes = ["05", "83"];
+  const errorCodes = ["41", "03", "74", "14", "04", "12"];
 
   let SQS_Type = process.env.BBVA_EVENTS_SQS;
 
