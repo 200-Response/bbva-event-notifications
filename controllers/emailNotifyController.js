@@ -17,6 +17,7 @@ let sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 exports.send = async (req, res) => {
     console.log(req.body);
+    let bucket = 'bbva-los4-siniestros';
 
     if(req.body.email){
         console.log('sending single email');
@@ -60,7 +61,13 @@ const sendEmail = (email, title, html)=>{
 }
 
    
-
+exports.list = async(req, res) =>{
+    let bucket = 'bbva-los4-siniestros';
+    let emailList =  await s3Service.getS3Object(bucket,'emailList.json');
+    emailList = emailList.Body.toString('utf-8');
+    emailList = emailList.split(',');
+    res.json(emailList);
+}
 
 
 exports.addEmail = async(req,res) =>{
