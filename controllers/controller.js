@@ -29,24 +29,42 @@ exports.processSQSMessage = async (req) => {
   console.log("message_data", message_data);
 
   // {
-  //   "TPV_dynamo_part_key": "MX0000_806",
-  //   "TPV_dynamo_order_key": 1635025182636,
-  //   "comercio_state": "QUINTANA ROO",
-  //   "ipAddress": "144.75.78.74",
-  //   "comercio_longitude": "-86.85460944",
-  //   "statusCode": "00",
-  //   "transactionAmount": 56060,
+    //   "TPV_dynamo_part_key": "MX0000_526",
+    //   "ipAddress": "210.141.60.181",
+    //   "comercio_longitude": "-86.87380453",
+    //   "comercio_city": "Cancún",
+    //   "comercio_zipcode": "",
+    //   "comercio_latitude": "21.18126615",
+    //   "comercio_state": "QUINTANA ROO",
+    //   "statusCode": "03",
+    //   "transactionId": "1gU7CJ4QUWmE1dFVpqREFcfFej9pTjJuk",
+    //   "comercio_name": "CERVEFRIO",
+    //   "cliente_country": "MX",
+    //   "serialNumberTpv": "MX0000_526",
+    //   "comercio_street": "JUAN DE LA BARRERA",
+    //   "bin": "4000-0012-3456-2669",
+
+  //   "TPV_dynamo_order_key": 1635033302913,
+  //   "timestamp": 1635033302913,
+  
   //   "comercio_country": "MX",
-  //   "bin": "5433-8532-7024-3217",
-  //   "timestamp": 1635025182636,
-  //   "comercio_street": "La Luna",
-  //   "transactionId": "1YjKXFbfmvK3D3Xr8Q2kmEHE4j",
-  //   "comercio_name": "SIX YAQUIS",
-  //   "comercio_city": "Cancún",
-  //   "comercio_zipcode": "77500",
-  //   "serialNumberTpv": "MX0000_806",
-  //   "comercio_latitude": "21.13085503"
+  //   "cliente_state": "Chihuahua",
+  //   "cliente_city": "Alcántarbury",
+  //   "cliente_zipcode": "82729",
+  //   "cliente_street": "4313 Miranda Caserio",
+  //   "cliente_firstName": "Jerónimo",
+  //   "cliente_lastName": "Jaime",
+  //   "cliente_longitude": "109.3821",
+  //   "cliente_latitude": "-7.8969",
+  //   "transactionAmount": 59079,
+  //   "cliente_phone": "554 690 192",
+  //   "cliente_account": "40641804",
+  //   "cliente_created": "2021-01-14T15:34:21.846Z",
+  //   "cliente_gender": "Agender",
+  //   "cliente_accountName": "Personal Loan Account"
+  
   //  }
+
   let response;
 
   let snsParams = {
@@ -80,100 +98,12 @@ exports.processSQSMessage = async (req) => {
     console.log(response);
     if (response.Count > 0) {
 
-    
+      emailParams.html = "<p>"+"Estado: " + response.Items[0].TPV_error_dynamo_order_key+"</p>";
+      
       snsParams.Message = "\n" + snsParams.Message +
       "Estado: " + response.Items[0].TPV_error_dynamo_order_key;
-
-      emailParams.html = "<p>"+"Estado: " + response.Items[0].TPV_error_dynamo_order_key+"</p>";
-
-      if(typeof message_data.details.comercio_name !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Nombre del comercio: " + message_data.details.comercio_name;
-
-        emailParams.html = emailParams.html + "<br/>" +
-        "<p>Nombre del comercio: " + message_data.details.comercio_name+"</p>";;
-      }
       
-      if(typeof message_data.details.serialNumberTpv !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "SN TPV: " + message_data.details.serialNumberTpv;
-      }
-      
-      if(typeof message_data.details.ipAddress !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Direccion IP: " + message_data.details.ipAddress;
-      }
-
-      if(typeof message_data.details.bin !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Bin: " + message_data.details.bin;
-      }
-      
-        if(typeof message_data.details.transactionId !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "ID de Transacción: " + message_data.details.transactionId;
-      }
-
-      if(typeof message_data.details.comercio_city !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Ciudad: " + message_data.details.comercio_city;
-      }
-
-      if(typeof message_data.details.comercio_zipcode !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "CP: " + message_data.details.comercio_zipcode;
-      }
-
-      if(typeof message_data.details.comercio_state !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Estado: " + message_data.details.comercio_state;
-      }
-
-      if(typeof message_data.details.cliente_country !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Pais: " + message_data.details.cliente_country;
-      }
-
-      if(typeof message_data.details.comercio_street !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Calle: " + message_data.details.comercio_street;
-      }
-
-      if(typeof message_data.details.comercio_latitude !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Latitud: " + message_data.details.comercio_latitude;
-      }
-
-      if(typeof message_data.details.comercio_longitude !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Longitud: " + message_data.details.comercio_longitude
-        + "\n" + "\n";
-      }
-
-      if(typeof message_data.details.ISAM.serie !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Serie TPV: " + message_data.details.ISAM.serie;
-      }
-
-      if(typeof message_data.details.ISAM.equipo !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Equipo TPV: " + message_data.details.ISAM.equipo;
-      }
-
-      if(typeof message_data.details.ISAM.marca !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Marca TPV: " + message_data.details.ISAM.marca;
-      }
-
-      if(typeof message_data.details.ISAM.modelo !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Modelo TPV: " + message_data.details.ISAM.modelo;
-      }
-
-      if(typeof message_data.details.ISAM.estatus !== 'undefined'){
-        snsParams.Message = snsParams.Message + "\n" + 
-        "Estatus TPV: " + message_data.details.ISAM.estatus;
-      }
+      snsParams.Message = formatMessage(snsParams, message_data);
 
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
@@ -304,6 +234,143 @@ const formatDyanamoJsonToJson = (data) => {
   console.log("formatDyanamoJsonToJson:new", data);
   return data;
 }; 
+
+const formatMessage = (snsParams, message_data) => {
+
+  if(typeof message_data.details.comercio_name !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Nombre del comercio: " + message_data.details.comercio_name;
+
+    emailParams.html = emailParams.html + "<br/>" +
+    "<p>Nombre del comercio: " + message_data.details.comercio_name+"</p>";;
+  }
+  
+  if(typeof message_data.details.serialNumberTpv !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "SN TPV: " + message_data.details.serialNumberTpv;
+  }
+  
+  if(typeof message_data.details.ipAddress !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Direccion IP: " + message_data.details.ipAddress;
+  }
+
+  if(typeof message_data.details.bin !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Bin: " + message_data.details.bin;
+  }
+  
+    if(typeof message_data.details.transactionId !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "ID de Transacción: " + message_data.details.transactionId;
+  }
+
+  if(typeof message_data.details.comercio_city !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Ciudad: " + message_data.details.comercio_city;
+  }
+
+  if(typeof message_data.details.comercio_zipcode !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "CP: " + message_data.details.comercio_zipcode;
+  }
+
+  if(typeof message_data.details.comercio_state !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Estado: " + message_data.details.comercio_state;
+  }
+
+  if(typeof message_data.details.cliente_country !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Pais: " + message_data.details.cliente_country;
+  }
+
+  if(typeof message_data.details.comercio_street !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Calle: " + message_data.details.comercio_street;
+  }
+
+  if(typeof message_data.details.comercio_latitude !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Latitud: " + message_data.details.comercio_latitude;
+  }
+
+  if(typeof message_data.details.comercio_longitude !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Longitud: " + message_data.details.comercio_longitude
+    + "\n" + "\n";
+  }
+
+  if(typeof message_data.details.ISAM.serie !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Serie TPV: " + message_data.details.ISAM.serie;
+  }
+
+  if(typeof message_data.details.ISAM.equipo !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Equipo TPV: " + message_data.details.ISAM.equipo;
+  }
+
+  if(typeof message_data.details.ISAM.marca !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Marca TPV: " + message_data.details.ISAM.marca;
+  }
+
+  if(typeof message_data.details.ISAM.modelo !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Modelo TPV: " + message_data.details.ISAM.modelo;
+  }
+
+  if(typeof message_data.details.ISAM.estatus !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Estatus TPV: " + message_data.details.ISAM.estatus;
+  }
+
+  if(typeof message_data.details.cliente_state !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "\n" +
+    "Datos del cliente \n" +
+    "Estado: " + message_data.details.cliente_state;
+  }
+  if(typeof message_data.details.cliente_city !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Ciudad: " + message_data.details.cliente_city;
+  }
+  if(typeof message_data.details.cliente_zipcode !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Código postal: " + message_data.details.cliente_zipcode;
+  }
+  if(typeof message_data.details.cliente_street !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Dirección: " + message_data.details.cliente_street;
+  }
+  if(typeof message_data.details.cliente_firstName !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Nombre: " + message_data.details.cliente_firstName;
+  }
+  if(typeof message_data.details.cliente_lastName !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Apellidos: " + message_data.details.cliente_lastName;
+  }
+  if(typeof message_data.details.transactionAmount !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Monto de la transacción: " + message_data.details.transactionAmount;
+  }
+  if(typeof message_data.details.cliente_phone !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Teléfono: " + message_data.details.cliente_phone;
+  }
+  if(typeof message_data.details.cliente_account !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Cuenta: " + message_data.details.cliente_account;
+  }
+  if(typeof message_data.details.cliente_accountName !== 'undefined'){
+    snsParams.Message = snsParams.Message + "\n" + 
+    "Nombre de cuenta: " + message_data.details.cliente_accountName;
+  }
+  return snsParams.Message;
+
+};
 
 const formatWebhookSlackCardMessage = (data, details) => {
   const initialMessageBodySchema = {
