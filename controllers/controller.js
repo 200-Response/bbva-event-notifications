@@ -198,7 +198,7 @@ const sendSQSMessage = (statusCode, data) => {
 
   let SQS_Type = process.env.BBVA_EVENTS_SQS;
 
-  if (statusCode.includes(errorCodes)) {
+  if (errorCodes.includes(statusCode)) {
     SQS_Type = process.env.BBVA_ERRORS_SQS;
   }
 
