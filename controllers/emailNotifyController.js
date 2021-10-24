@@ -26,9 +26,9 @@ exports.send = async (req, res) => {
         console.log('sending multiple emails');
         let emailList =  await s3Service.getS3Object(bucket,'emailList.json');
         emailList = emailList.Body.toString('utf-8');
-        emailList.split(',');
+        emailList = emailList.split(',');
         for(let i=0;i<emailList.length;i++){
-            await sendEmail(emailList,req.body.title,req.body.html);
+            await sendEmail(emailList[i],req.body.title,req.body.html);
         }
     }
 
