@@ -63,6 +63,20 @@ exports.getS3Names = (bucket, dateS3, s3Prefix) => {
   });
 }
 
+//Create an object on S3
+exports.create = (params) =>{
+  let s3 = new AWS.S3();
+  return new Promise((resolve, reject) =>{
+    s3.putObject(params, (err, data)=>{
+      if (err) {
+          console.log(err);
+         reject(err);
+      }
+      resolve(data);
+    });
+  });//Close Promise Wrapper
+};
+
 //Get all s3 names objects from today
 exports.getS3NamesMonthly = (bucket, dateS3, s3Prefix) => {
   loadKeys();
