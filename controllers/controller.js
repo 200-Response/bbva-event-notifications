@@ -115,7 +115,8 @@ exports.processSQSMessage = async (req) => {
       snsParams.Message = newMsg.Message;
       
       emailParams.html = newMsg.html;
-      
+      emailParams.title = response.Items[0].SNS_Topic;
+
       snsParams.Subject = response.Items[0].SNS_Topic;
       snsParams.TopicArn = response.Items[0].SNS_Topic_ARN;
     }
@@ -127,7 +128,13 @@ exports.processSQSMessage = async (req) => {
 
   try {
     if(message_data.source.includes(process.env.BBVA_EVENTS_SQS)){
-      response = await snsService.publish(snsParams);
+      // response = await snsService.publish(snsParams);
+
+      const response = await axios.post(process.env.EMAIL_SERVICE, emailParams, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
     }
     else{
       // send to webhook

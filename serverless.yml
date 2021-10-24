@@ -36,6 +36,7 @@ provider:
     DYNAMO_TABLE_TPV_DATA: ${self:custom.DYNAMO_TABLE_TPV_DATA}
     BBVA_DB_ISAM: ${self:custom.BBVA_DB_ISAM}
     WEBHOOK: ${self:custom.WEBHOOK}
+    EMAIL_SERVICE: ${self:custom.EMAIL_SERVICE}
     AwsAccountId: ${self:custom.AwsAccountId}
     DataSetId: ${self:custom.DataSetId}
     IngestionId: ${self:custom.IngestionId}
@@ -105,6 +106,8 @@ custom:
   BBVA_DB_ISAM: 'http://ec2-54-234-93-168.compute-1.amazonaws.com:3300/isam/'
 
   WEBHOOK: "https://hooks.slack.com/services/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"
+
+  EMAIL_SERVICE: "https://czq95uqrig.execute-api.us-east-1.amazonaws.com/production/email/send"
 
   AwsAccountId: '327581952167'
   DataSetId: '3117ea28-6c0b-41ba-9a1e-5cfd0471ec91'
