@@ -25,12 +25,12 @@ exports.send = async (req, res) => {
     }
     mailgun.messages().send(data, function (err, body) {
         if (err) {
-            res.render('error', { error : err});
+            res.json(err);
             console.log("got an error: ", err);
         }
         else {
             console.log(body);
-            res.render('submitted', { email : req.params.mail });
+            res.json(`email was sent successfully ${req.body.email}`);
         }
     });
 };
