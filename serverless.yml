@@ -106,5 +106,3 @@ custom:
   DataSetId: 'd639e92d-8c17-4497-a0c7-c8f93fb51a1f'
   IngestionId: 'TPV_Data_Ingestion'
   IngestionType: 'INCREMENTAL_REFRESH'
-
-  "https://hooks.slack.com/services/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"
